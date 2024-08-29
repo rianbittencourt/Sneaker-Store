@@ -1,9 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
-
-interface Product {
-  make: string;
-  thumbnail: string;
-}
+import { Product } from "@/app/types/ProductType";
 
 const Products: React.FC<{ productShow: number }> = ({ productShow }) => {
   const [topProducts, setTopProducts] = useState<Product[]>([]);
