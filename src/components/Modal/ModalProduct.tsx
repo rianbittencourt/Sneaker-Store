@@ -9,15 +9,15 @@ import { Product } from "@/app/types/ProductType";
 export default function ModalProduct({ product }: { product: Product }) {
   const [open, setOpen] = useAtom(OpenModalAtom);
   const productDetails = [
-    { label: "Box Condition", value: product.box_condition, type: "text" },
-    { label: "Type", value: "Shoes", type: "text" },
-    { label: "Sku", value: product.sku, type: "text" },
-    { label: "Material", value: product.upper_material, type: "text" },
+    { label: "Box Condition", value: "teste", type: "text" as const },
+    { label: "Type", value: "Shoes", type: "text" as const },
+    { label: "Sku", value: "teste", type: "text" as const },
+    { label: "Material", value: "rte", type: "text" as const },
     {
       label: "Size Range",
       value: "Shoes",
-      type: "select",
-      options: product.size_range,
+      type: "select" as const,
+      options: product.size_range.map(String),
     },
   ];
 

@@ -18,7 +18,7 @@ const ProductDetailsTable: React.FC<ProductDetailsTableProps> = ({
         {details.map((detail, index) => (
           <tr key={index} className="">
             <td className="text-gray-800 font-medium">{detail.label}</td>
-            <td className=" py-2">
+            <td className="py-2">
               {detail.type === "text" ? (
                 <span className="text-gray-500">{detail.value}</span>
               ) : detail.type === "select" && detail.options ? (
