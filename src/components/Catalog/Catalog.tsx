@@ -47,9 +47,9 @@ export default function Catalog() {
       </div>
       <div className="grid grid-cols md:grid-cols-3 lg:grid-cols-4 gap-10 max-w-7xl m-auto mt-5 sm:grid-cols-2 grid-cols-2 px-5">
         {jordanProducts.slice(0, 8).map((product) => (
-          <div key={product.id} className="flex flex-col rounded-md">
+          <div key={product.id} className="flex flex-col rounded-md group">
             <div className="bg-gray-100 group md:px-10 sm:px-6 px-2 cursor-pointer w-full h-full flex flex-col items-start justify-start">
-              <div className="background-image flex flex-col pb-5 bg-cover   hover:scale-105 transition-all ">
+              <div className="background-image flex flex-col pb-5 bg-cover   group-hover:scale-105 transition-all ">
                 <img
                   src={product.main_picture_url}
                   alt="sneaker"
