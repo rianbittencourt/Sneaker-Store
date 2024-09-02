@@ -1,27 +1,41 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CiHeart } from "react-icons/ci";
 import { BsEye } from "react-icons/bs";
 import ModalProduct from "../Modal/ModalProduct";
 import { useAtom } from "jotai";
 import { JordanProductsAtom, OpenModalAtom } from "../../atom/atom";
 import { Product } from "@/app/types/ProductType";
+import { addToCart, cartAtom } from "@/atom/cartAtom";
 
 export default function Catalog() {
   const [open, setOpen] = useAtom<boolean>(OpenModalAtom);
   const [jordanProducts, setJordanProducts] =
     useAtom<Product[]>(JordanProductsAtom);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [, addToCartAction] = useAtom(addToCart);
+  const [cart] = useAtom(cartAtom);
 
   useEffect(() => {
     fetch("/api/hello")
       .then((response) => response.json())
       .then((data) => setJordanProducts(data.sneakers));
-    console.log;
   }, []);
 
   function OpenModal(product: Product) {
     setSelectedProduct(product);
     setOpen(true);
+  }
+
+  function handleAddToCart(product: Product) {
+    addToCartAction({
+      sku: product.sku,
+      name: product.name,
+      price: product.retail_price_cents / 100,
+      size: "S",
+      image: product.main_picture_url,
+    });
+
+    console.log("Item adicionado ao carrinho. Estado atual do carrinho:", cart);
   }
 
   return (
@@ -43,7 +57,10 @@ export default function Catalog() {
                 />
                 <div className="w-full flex items-center">
                   <ul className="opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-in-out m-auto gap-2 flex">
-                    <li className="bg-white p-1 hover:bg-stone-700 hover:text-white">
+                    <li
+                      className="bg-white p-1 hover:bg-stone-700 hover:text-white"
+                      onClick={() => handleAddToCart(product)}
+                    >
                       <CiHeart className="text-2xl" />
                     </li>
                     <li
@@ -73,9 +90,7 @@ export default function Catalog() {
           View All Products
         </a>
       </div>
-      {selectedProduct && (
-        <ModalProduct product={selectedProduct} /> // Passa o produto selecionado
-      )}
+      {selectedProduct && <ModalProduct product={selectedProduct} />}
     </>
   );
 }

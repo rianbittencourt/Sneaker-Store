@@ -7,6 +7,8 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
+  size: string;
+  image: string;
 }
 
 
@@ -69,6 +71,4 @@ export const clearCart = atom(null, (get, set) => {
 });
 
 
-export const JordanProductsAtom = atom<any[]>([]);
-export const OpenModalAtom = atom<boolean>(false);
-export const OpenCartAtom = atom<boolean>(false);
+
