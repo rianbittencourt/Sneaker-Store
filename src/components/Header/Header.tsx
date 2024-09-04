@@ -36,9 +36,15 @@ const Menu: Menu[] = [
 
 export default function Header() {
   return (
-    <div className="bg-stone-950 py-5 fixed z-50 w-full">
+    <div data-testid="header" className="bg-stone-950 py-5 fixed z-50 w-full">
       <div className="flex justify-between max-w-7xl m-auto items-center px-5">
-        <Image src="/logo.jpg" alt="logo" width={50} height={50} />
+        <Image
+          data-testid="logo"
+          src="/logo.jpg"
+          alt="logo"
+          width={50}
+          height={50}
+        />
         <ul className="flex gap-5">
           {Menu.map((item, index) => (
             <li
