@@ -1,26 +1,48 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Product } from "@/app/types/ProductType";
 
 const Products: React.FC<{ productShow: number }> = ({ productShow }) => {
   const [topProducts, setTopProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/hello")
-      .then((response) => response.json())
-      .then((data) => setTopProducts(data.sneakers));
+    const fetchProducts = async () => {
+      try {
+        console.log("Fetching products...");
+        const response = await fetch("/api/hello");
+        console.log("Response received:", response);
+        const data = await response.json();
+        console.log("Data parsed:", data);
+        setTopProducts(data.sneakers);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products");
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  useEffect(() => {
-    console.log(topProducts);
-  }, [topProducts]);
+  if (loading) {
+    return <div data-testid="loading-placeholder">Loading...</div>;
+  }
 
-  if (!topProducts[productShow]) {
-    return;
+  if (error) {
+    return <div data-testid="error-message">{error}</div>;
+  }
+
+  if (!topProducts || topProducts.length === 0 || !topProducts[productShow]) {
+    console.log("No products available:", topProducts);
+    return <div data-testid="no-products">No products available</div>;
   }
 
   return (
     <div className="max-w-7xl w-full h-full m-auto flex flex-col md:flex-row items-center">
       <div
+        data-testid="product-image"
         className="flex justify-center transition-all duration-1000 ease-in-out items-center bg-center bg-contain md:w-1/2 bg-no-repeat w-full h-full mix-blend-multiply -rotate-2"
         style={{
           backgroundImage: `url(${topProducts[productShow].main_picture_url})`,
@@ -51,41 +73,21 @@ const Component: React.FC = () => {
 
   return (
     <div className="bg-metallic-gradient w-full h-[70vh] shadow-md px-5 flex flex-col justify-center items-center">
-      <Suspense
-        fallback={
-          <div className="max-w-7xl w-full h-full m-auto flex flex-col md:flex-row items-center animate-pulse">
-            <div className="w-full h-full bg-gray-300 animate-pulse"></div>
-          </div>
-        }
-      >
-        <Products productShow={productShow} />
-      </Suspense>
+      <Products productShow={productShow} />
 
       <div className="flex gap-2 mb-5">
-        <div
-          className={`h-4 w-4 rounded-full bg-black/20 border-2 border-stone-500/20 ${
-            productShow === 0
-              ? "bg-black/80 pointer-events-none"
-              : "bg-black/20 hover:bg-black/50 cursor-pointer"
-          }`}
-          onClick={() => setProductShow(0)}
-        ></div>
-        <div
-          className={`h-4 w-4 rounded-full bg-black/20 border-2 border-stone-500/20 ${
-            productShow === 1
-              ? "bg-black/80 pointer-events-none"
-              : "bg-black/20 hover:bg-black/50 cursor-pointer"
-          }`}
-          onClick={() => setProductShow(1)}
-        ></div>
-        <div
-          className={`h-4 w-4 rounded-full bg-black/20 border-2 border-stone-500/20 ${
-            productShow === 2
-              ? "bg-black/80 pointer-events-none"
-              : "bg-black/20 hover:bg-black/50 cursor-pointer"
-          }`}
-          onClick={() => setProductShow(2)}
-        ></div>
+        {[0, 1, 2].map((index) => (
+          <div
+            key={index}
+            data-testid="product-selector"
+            className={`h-4 w-4 rounded-full bg-black/20 border-2 border-stone-500/20 ${
+              productShow === index
+                ? "bg-black/80 pointer-events-none"
+                : "bg-black/20 hover:bg-black/50 cursor-pointer"
+            }`}
+            onClick={() => setProductShow(index)}
+          ></div>
+        ))}
       </div>
     </div>
   );
